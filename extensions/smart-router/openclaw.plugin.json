@@ -1,0 +1,74 @@
+{
+  "id": "smart-router",
+  "name": "Smart Router",
+  "description": "Classifies each incoming message by complexity and routes it to the best-fit model tier. Supports Anthropic, Google, OpenAI, NVIDIA Nemotron, and any other configured provider.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Enable or disable routing (default: true)."
+      },
+      "classifierProvider": {
+        "type": "string",
+        "description": "Provider for the cheap classifier model (default: anthropic)."
+      },
+      "classifierModel": {
+        "type": "string",
+        "description": "Model used to classify complexity (default: claude-haiku-4-5)."
+      },
+      "classifierTimeoutMs": {
+        "type": "number",
+        "description": "Timeout for the classifier call in ms (default: 8000)."
+      },
+      "tiers": {
+        "type": "object",
+        "description": "Map from complexity tier to provider/model. Override any or all tiers.",
+        "additionalProperties": false,
+        "properties": {
+          "simple": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "provider": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          },
+          "medium": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "provider": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          },
+          "complex": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "provider": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          },
+          "code": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "provider": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          },
+          "creative": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "provider": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
