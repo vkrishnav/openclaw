@@ -37,6 +37,7 @@ import {
 } from "../command/session.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../defaults.js";
 import { isStrictAgenticExecutionContractActive } from "../execution-contract.js";
+import { collectProviderApiKeys } from "../live-auth-keys.js";
 import {
   coerceToFailoverError,
   describeFailoverError,
@@ -534,11 +535,13 @@ export async function runEmbeddedPiAgent(
               ...profileOrder.filter((profileId) => profileId !== providerPreferredProfileId),
             ]
           : profileOrder;
+      const envKeys = collectProviderApiKeys(provider);
+      const envCandidates = envKeys.length > 0 ? envKeys.map((k) => `!key:${k}`) : [undefined];
       const profileCandidates = lockedProfileId
         ? [lockedProfileId]
         : providerOrderedProfiles.length > 0
-          ? providerOrderedProfiles
-          : [undefined];
+          ? [...providerOrderedProfiles, ...envCandidates]
+          : envCandidates;
       let profileIndex = 0;
       const traceAttempts: TraceAttempt[] = [];
 

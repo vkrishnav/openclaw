@@ -452,8 +452,18 @@ export async function resolveApiKeyForProvider(params: {
 }): Promise<ResolvedProviderAuth> {
   const { provider, cfg, profileId, preferredProfile } = params;
 
+  if (profileId?.startsWith("!key:")) {
+    return {
+      apiKey: profileId.slice(5),
+      profileId,
+      source: "env fallback",
+      mode: "api-key",
+    };
+  }
+
+  const store = params.store ?? ensureAuthProfileStore(params.agentDir);
+
   if (profileId) {
-    const store = params.store ?? ensureAuthProfileStore(params.agentDir);
     const resolved = await resolveApiKeyForProfile({
       cfg,
       store,
@@ -539,7 +549,6 @@ export async function resolveApiKeyForProvider(params: {
       mode: "api-key",
     };
   }
-  const store = params.store ?? ensureAuthProfileStore(params.agentDir);
   const order = resolveAuthProfileOrder({
     cfg,
     store,
